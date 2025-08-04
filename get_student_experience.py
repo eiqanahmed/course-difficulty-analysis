@@ -55,7 +55,7 @@ def normalize_name(name):
     return ' '.join(name_with_spaces.strip().split()).lower()
 
 
-def build_prof_name_to_id_map(csv_path="professor_data.csv"):
+def build_prof_name_to_id_map(csv_path="./data_scraping/professor_data.csv"):
     """
     Builds a dictionary mapping lowercase, space-normalized professor names to their RMP IDs.
     """
@@ -79,8 +79,8 @@ if __name__ == "__main__":
     df = pd.read_csv("cleaned_reviews.csv")
 
     if prof != "":  # =========== CASE: course + prof ===========
-        lookup = load_lookup_table("cleaned_reviews.csv")
-        name_to_id = build_prof_name_to_id_map("professor_data.csv")
+        lookup = load_lookup_table("./data_scraping/cleaned_reviews.csv")
+        name_to_id = build_prof_name_to_id_map("./data_scraping/professor_data.csv")
         normalized = normalize_name(prof).strip().lower()
         prof_id = name_to_id.get(normalized)
 
@@ -92,8 +92,8 @@ if __name__ == "__main__":
         if score is not None:
             print(f"Lookup-based student experience score: {score}/5")
         else:
-            w = np.load("linear_model_weights.npy")
-            preprocessor = joblib.load("preprocessor.pkl")
+            w = np.load("./ses_lin_reg_models/linear_model_weights.npy")
+            preprocessor = joblib.load("./ses_lin_reg_models/preprocessor.pkl")
 
             prof_reviews = df[df["prof_id"] == prof_id]
             course_reviews = df[df["normalized_course_code"] == normalized_course]
@@ -134,8 +134,8 @@ if __name__ == "__main__":
         if course_reviews.empty:
             print("No reviews found for that course.")
         else:
-            w = np.load("linear_model_weights_noprof.npy")
-            preprocessor = joblib.load("preprocessor_noprof.pkl")
+            w = np.load("./ses_lin_reg_models/linear_model_weights_noprof.npy")
+            preprocessor = joblib.load("./ses_lin_reg_models/preprocessor_noprof.pkl")
 
             course_reviews["difficulty"] = course_reviews["difficulty"].fillna(course_reviews["difficulty"].mean())
             course_reviews["thumbs_up"] = course_reviews["thumbs_up"].fillna(0)
